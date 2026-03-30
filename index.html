@@ -3,324 +3,299 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Библейские связи — полная Библия</title>
+  <title>Библейские связи — умный поиск</title>
   <style>
     :root {
-      --bg-main: #F5F7FA;
-      --bg-card: #FFFFFF;
-      --text-main: #2D3748;
-      --text-muted: #718096;
-      --accent: #3182CE;
-      --accent-hover: #2B6CB0;
-      --accent-light: #EBF8FF;
-      --out-link: #805AD5;
-      --in-link: #38B2AC;
-      --border: #E2E8F0;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
+      --bg-main: #F5F7FA; --bg-card: #FFFFFF; --text-main: #2D3748; --text-muted: #718096;
+      --accent: #3182CE; --accent-hover: #2B6CB0; --accent-light: #EBF8FF;
+      --out-link: #805AD5; --in-link: #38B2AC; --semantic-link:#D69E2E;
+      --border: #E2E8F0; --shadow-sm: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
       --shadow-md: 0 10px 25px -5px rgba(0,0,0,0.08), 0 8px 10px -6px rgba(0,0,0,0.04);
-      --shadow-focus: 0 0 0 3px rgba(49, 130, 206, 0.2);
-      --radius-card: 16px;
-      --radius-btn: 10px;
-      --radius-sm: 8px;
-      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      --shadow-focus: 0 0 0 3px rgba(49,130,206,.2); --radius-card:16px; --radius-btn:10px; --radius-sm:8px; --transition: all .28s cubic-bezier(.4,0,.2,1);
     }
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-main); color: var(--text-main); line-height: 1.5; }
-    body.modal-open { overflow: hidden; }
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-    .animate-up { animation: fadeInUp 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-    .delay-1 { animation-delay: 0.08s; }
-    .app-wrapper { min-height: 100vh; display: flex; flex-direction: column; padding: 20px 16px; transition: var(--transition); }
-    .app-wrapper.centered { justify-content: center; }
-    .app-container { max-width: 720px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
-    .premium-card { background: var(--bg-card); border-radius: var(--radius-card); padding: 20px; box-shadow: var(--shadow-sm); border: 1px solid rgba(226, 232, 240, 0.8); transition: var(--transition); }
-    .premium-card:hover { box-shadow: var(--shadow-md); }
-    .main-hint { text-align: center; font-size: 17px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; }
-    .sub-hint { text-align:center; color:var(--text-muted); font-size:14px; margin-bottom:18px; }
-    .stats { display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
-    .stat { background: var(--bg-main); border:1px solid var(--border); color: var(--text-muted); border-radius: 999px; padding: 7px 11px; font-size: 12px; font-weight:600; }
-    .info-hint { display: flex; align-items: flex-start; gap: 12px; background: var(--bg-main); padding: 14px; border-radius: var(--radius-btn); font-size: 13.5px; color: var(--text-muted); margin: 20px 0; line-height: 1.5; border: 1px solid var(--border); }
-    .info-hint svg { flex-shrink: 0; color: var(--accent); }
-    .search-wrap { position: relative; margin-bottom: 16px; }
-    .search-input, .modal-search { width: 100%; background: var(--bg-main); border: 1px solid var(--border); border-radius: var(--radius-btn); padding: 14px 16px; font-size: 16px; color: var(--text-main); outline: none; transition: var(--transition); }
-    .search-input:focus, .modal-search:focus { border-color: var(--accent); background: #fff; box-shadow: var(--shadow-focus); }
-    .search-input::placeholder, .modal-search::placeholder { color: #A0AEC0; }
-    .search-dropdown { position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-card); border-radius: var(--radius-btn); box-shadow: var(--shadow-md); margin-top: 8px; z-index: 50; max-height: 320px; overflow-y: auto; border: 1px solid var(--border); display: none; }
-    .search-item { padding: 12px 16px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.2s; }
-    .search-item:last-child { border-bottom: none; }
-    .search-item:hover, .search-item:active { background: var(--bg-main); }
-    .search-item strong { color: var(--accent); display: block; margin-bottom: 4px; }
-    .search-item span { font-size: 13px; color: var(--text-muted); display: block; line-height: 1.4; }
-    .selectors-row { display: flex; gap: 10px; margin-bottom: 20px; }
-    .sel-btn { flex: 1; display: flex; justify-content: space-between; align-items: center; background: var(--bg-card); border: 1px solid var(--border); padding: 12px 14px; border-radius: var(--radius-btn); font-size: 15px; cursor: pointer; transition: var(--transition); min-width: 0; }
-    .sel-btn.book { flex: 2.2; }
-    .sel-btn:active, .sel-btn:hover { background: var(--bg-main); border-color: #CBD5E0; }
-    .sel-val { font-weight: 600; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .chevron { width: 16px; height: 16px; flex-shrink: 0; margin-left: 6px; stroke: var(--text-muted); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-    .btn-row { display: flex; justify-content: space-between; gap: 10px; }
-    .btn-main, .btn-secondary, .btn-full { border: none; border-radius: var(--radius-btn); font-size: 15px; font-weight: 600; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content:center; gap: 8px; }
-    .btn-main { background: var(--accent); color: #fff; padding: 12px 28px; box-shadow: 0 4px 6px rgba(49,130,206,.2); }
-    .btn-main:hover, .btn-full:hover { background: var(--accent-hover); transform: translateY(-1px); }
-    .btn-secondary { background: var(--bg-main); color: var(--text-main); padding: 12px 18px; border:1px solid var(--border); }
-    .btn-secondary:hover { background:#fff; }
-    #resultsSection { display: none; padding-bottom: 20px; }
-    .verse-ref { display: inline-block; padding: 6px 14px; background: var(--accent-light); color: var(--accent); border-radius: var(--radius-sm); font-weight: 700; font-size: 14px; margin-bottom: 16px; border: 1px solid rgba(49, 130, 206, 0.1); }
-    .verse-text { font-size: 20px; line-height: 1.7; font-family: Georgia, serif; color: #1A202C; white-space: pre-wrap; }
-    .links-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin: 24px 0 12px; display: flex; align-items: center; gap: 12px; }
-    .links-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-    .tags-container { display: flex; flex-wrap: wrap; gap: 10px; }
-    .tag-btn { padding: 8px 14px; background: var(--bg-main); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; color: var(--text-main); cursor: pointer; transition: var(--transition); }
-    .tag-btn.out { border-left: 3px solid var(--out-link); }
-    .tag-btn.in { border-left: 3px solid var(--in-link); }
-    .tag-btn:hover { background: #fff; box-shadow: var(--shadow-sm); transform: translateY(-1px); border-color: #CBD5E0; }
-    .graph-container { background: var(--bg-card); border-radius: var(--radius-card); border: 1px solid var(--border); padding: 20px; margin-top: 20px; overflow-x: auto; text-align: center; box-shadow: var(--shadow-sm); }
-    .graph-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; color: var(--text-main); }
-    svg.tree { display: block; margin: 0 auto; overflow: visible; }
-    .note-box { background:#fffaf0; border:1px solid #f5deb3; color:#7b5b1c; padding:12px 14px; border-radius:12px; font-size:13px; line-height:1.5; margin-top:16px; }
-    .modal-overlay { position: fixed; inset: 0; background: rgba(26,32,44,.4); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity .3s ease; padding: 16px; }
-    .modal-overlay.active { opacity: 1; pointer-events: auto; }
-    .modal-content { background: var(--bg-card); width: 100%; max-width: 520px; max-height: 85vh; border-radius: var(--radius-card); display: flex; flex-direction: column; box-shadow: var(--shadow-md); transform: scale(.96) translateY(10px); opacity: 0; transition: all .3s cubic-bezier(0.34,1.56,0.64,1); }
-    .modal-overlay.active .modal-content { transform: scale(1) translateY(0); opacity: 1; }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border); }
-    .modal-title { font-size: 18px; font-weight: 600; }
-    .btn-close { background: var(--bg-main); border: none; width: 32px; height: 32px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-muted); font-size: 16px; transition: var(--transition); }
-    .btn-close:hover { background: #E2E8F0; color: #1A202C; }
-    .modal-body { padding: 16px 20px; overflow-y: auto; flex: 1; }
-    .list-item { padding: 14px 12px; border-bottom: 1px solid var(--border); font-size: 16px; cursor: pointer; transition: background 0.2s; border-radius: var(--radius-sm); }
-    .list-item:hover, .list-item:active { background: var(--bg-main); border-bottom-color: transparent; }
-    .list-item:last-child { border-bottom: none; }
-    .grid-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)); gap: 10px; }
-    .grid-item { background: var(--bg-main); padding: 14px 0; text-align: center; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; border: 1px solid var(--border); transition: var(--transition); color: var(--text-main); }
-    .grid-item:hover { border-color: #CBD5E0; }
-    .grid-item.active { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 4px 6px rgba(49,130,206,.2); }
-    .preview-text { font-size: 18px; line-height: 1.7; font-family: Georgia, serif; margin-bottom: 24px; color: #1A202C; white-space: pre-wrap; }
-    .btn-full { width: 100%; background: var(--accent); color: #fff; padding: 14px; }
-    .loading { display:flex; align-items:center; justify-content:center; min-height:45vh; color:var(--text-muted); font-size:15px; }
-    .small-muted { color: var(--text-muted); font-size: 13px; line-height: 1.5; }
-    @media (max-width: 560px){ .selectors-row,.btn-row { flex-direction:column; } .app-wrapper{ padding: 14px; } .premium-card,.graph-container{ padding:16px; } .verse-text{ font-size:18px; } }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:var(--bg-main);color:var(--text-main);line-height:1.5}
+    body.modal-open{overflow:hidden}
+    .app-wrapper{min-height:100vh;display:flex;flex-direction:column;padding:20px 16px;transition:var(--transition)}
+    .app-wrapper.centered{justify-content:center}.app-container{max-width:760px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+    .premium-card,.graph-container{background:var(--bg-card);border-radius:var(--radius-card);padding:20px;box-shadow:var(--shadow-sm);border:1px solid rgba(226,232,240,.8);transition:var(--transition)}
+    .premium-card:hover,.graph-container:hover{box-shadow:var(--shadow-md)}
+    .main-hint{text-align:center;font-size:18px;font-weight:700;margin-bottom:6px}.sub-hint{text-align:center;font-size:14px;color:var(--text-muted);margin-bottom:18px}
+    .stats{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:16px}.stat{background:var(--bg-main);border:1px solid var(--border);border-radius:999px;padding:7px 11px;font-size:12px;font-weight:700;color:var(--text-muted)}
+    .search-wrap{position:relative;margin-bottom:16px}.search-input,.modal-search{width:100%;background:var(--bg-main);border:1px solid var(--border);border-radius:var(--radius-btn);padding:14px 16px;font-size:16px;color:var(--text-main);outline:none;transition:var(--transition)}
+    .search-input:focus,.modal-search:focus{border-color:var(--accent);background:#fff;box-shadow:var(--shadow-focus)}
+    .search-dropdown{position:absolute;top:100%;left:0;right:0;background:var(--bg-card);border-radius:var(--radius-btn);box-shadow:var(--shadow-md);margin-top:8px;z-index:50;max-height:320px;overflow:auto;border:1px solid var(--border);display:none}
+    .search-item{padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .2s}.search-item:last-child{border-bottom:none}.search-item:hover,.search-item:active{background:var(--bg-main)}
+    .search-item strong{display:block;color:var(--accent);margin-bottom:4px}.search-item span{display:block;font-size:13px;color:var(--text-muted)} .reason{margin-top:6px;font-size:12px;color:var(--text-muted)}
+    .selectors-row{display:flex;gap:10px;margin-bottom:16px}.sel-btn{flex:1;display:flex;justify-content:space-between;align-items:center;background:var(--bg-card);border:1px solid var(--border);padding:12px 14px;border-radius:var(--radius-btn);font-size:15px;cursor:pointer;transition:var(--transition);min-width:0}.sel-btn.book{flex:2}.sel-btn:hover{background:var(--bg-main);border-color:#CBD5E0}
+    .sel-val{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chevron{width:16px;height:16px;flex-shrink:0;margin-left:6px;stroke:var(--text-muted);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+    .btn-row{display:flex;justify-content:space-between;gap:10px}.btn-main,.btn-ghost,.btn-full{border:none;border-radius:var(--radius-btn);padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:var(--transition)}
+    .btn-main{background:var(--accent);color:#fff;display:flex;align-items:center;gap:8px;box-shadow:0 4px 6px rgba(49,130,206,.2)} .btn-main:hover,.btn-full:hover{background:var(--accent-hover);transform:translateY(-1px)}
+    .btn-ghost{background:var(--bg-main);color:var(--text-main);border:1px solid var(--border)} .btn-ghost:hover{background:#fff}
+    #resultsSection{display:none;padding-bottom:20px}.verse-ref{display:inline-block;padding:6px 14px;background:var(--accent-light);color:var(--accent);border-radius:var(--radius-sm);font-weight:700;font-size:14px;margin-bottom:12px;border:1px solid rgba(49,130,206,.12)}
+    .verse-text{font-size:19px;line-height:1.65;font-family:Georgia,serif;color:#1A202C}.theme-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.theme-chip{font-size:12px;font-weight:700;color:#805AD5;background:#F7F0FF;border:1px solid #E9D8FD;border-radius:999px;padding:6px 10px}
+    .info-hint{display:flex;align-items:flex-start;gap:12px;background:var(--bg-main);padding:14px;border-radius:var(--radius-btn);font-size:13.5px;color:var(--text-muted);margin:18px 0;line-height:1.5;border:1px solid var(--border)}
+    .info-hint svg{flex-shrink:0;color:var(--accent)}
+    .links-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin:22px 0 12px;display:flex;align-items:center;gap:12px}.links-title:after{content:'';flex:1;height:1px;background:var(--border)}
+    .tags-container{display:flex;flex-wrap:wrap;gap:10px}.tag-btn{padding:8px 14px;background:var(--bg-main);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;font-weight:700;color:var(--text-main);cursor:pointer;transition:var(--transition)} .tag-btn:hover{background:#fff;box-shadow:var(--shadow-sm);transform:translateY(-1px)}
+    .tag-btn.out{border-left:3px solid var(--out-link)} .tag-btn.in{border-left:3px solid var(--in-link)} .tag-btn.sem{border-left:3px solid var(--semantic-link)}
+    .link-list{display:flex;flex-direction:column;gap:10px}.link-card{background:var(--bg-main);border:1px solid var(--border);border-radius:12px;padding:12px}.link-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:6px}.mini-ref{font-weight:800;color:var(--accent);cursor:pointer}.mini-badge{font-size:11px;font-weight:800;padding:4px 8px;border-radius:999px;background:#fff;border:1px solid var(--border);color:var(--text-muted)}.mini-badge.in{color:var(--in-link)}.mini-badge.out{color:var(--out-link)}.mini-badge.sem{color:var(--semantic-link)}
+    .mini-text{font-size:14px;color:var(--text-main);line-height:1.5}.mini-reason{margin-top:6px;font-size:12px;color:var(--text-muted)}
+    .graph-title{font-size:16px;font-weight:700;margin-bottom:14px}.empty-note{color:var(--text-muted);font-size:14px}.modal-overlay{position:fixed;inset:0;background:rgba(26,32,44,.4);backdrop-filter:blur(4px);display:flex;justify-content:center;align-items:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity .3s ease;padding:16px}.modal-overlay.active{opacity:1;pointer-events:auto}
+    .modal-content{background:var(--bg-card);width:100%;max-width:440px;max-height:85vh;border-radius:var(--radius-card);display:flex;flex-direction:column;box-shadow:var(--shadow-md);transform:scale(.95) translateY(10px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1)} .modal-overlay.active .modal-content{transform:scale(1) translateY(0);opacity:1}
+    .modal-header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border)}.modal-title{font-size:18px;font-weight:700}.btn-close{background:var(--bg-main);border:none;width:32px;height:32px;border-radius:var(--radius-sm);cursor:pointer;color:var(--text-muted);font-size:16px}
+    .modal-body{padding:16px 20px;overflow:auto;flex:1}.list-item{padding:14px 12px;border-bottom:1px solid var(--border);font-size:16px;cursor:pointer;border-radius:var(--radius-sm)} .list-item:hover{background:var(--bg-main);border-bottom-color:transparent}
+    .grid-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(65px,1fr));gap:10px}.grid-item{background:var(--bg-main);padding:14px 0;text-align:center;border-radius:var(--radius-sm);font-weight:700;cursor:pointer;border:1px solid var(--border);transition:var(--transition)} .grid-item.active,.grid-item:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+    .preview-text{font-size:18px;line-height:1.6;font-family:Georgia,serif;margin-bottom:18px;color:#1A202C}.loading-overlay{position:fixed;inset:0;background:rgba(245,247,250,.95);display:flex;justify-content:center;align-items:center;z-index:2000;padding:24px}.loading-card{max-width:420px;background:#fff;border:1px solid var(--border);border-radius:18px;padding:24px;box-shadow:var(--shadow-md);text-align:center}.spinner{width:42px;height:42px;border-radius:50%;border:4px solid #DCE8F7;border-top-color:var(--accent);margin:0 auto 16px;animation:spin .9s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+    .loading-title{font-size:18px;font-weight:800;margin-bottom:8px}.loading-text{font-size:14px;color:var(--text-muted);line-height:1.55}.progress-bar{height:10px;background:#EDF2F7;border-radius:999px;margin-top:16px;overflow:hidden}.progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),#63B3ED);transition:width .25s ease}.hidden{display:none!important}
+    @media (max-width:640px){.selectors-row,.btn-row{flex-direction:column}.app-container{max-width:100%}.verse-text{font-size:18px}}
   </style>
 </head>
 <body>
-<div class="app-wrapper centered" id="appWrapper">
-  <div class="app-container">
-    <div class="premium-card">
-      <div class="main-hint">Библейские связи — полная Библия</div>
-      <div class="sub-hint">Поиск по тексту, выбор книги/главы/стиха, предпросмотр и карта связанных мест.</div>
-      <div class="search-wrap">
-        <input type="text" id="mainSearchInput" class="search-input" placeholder="Слово, фраза или ссылка, например: любовь, Ин.3.16" autocomplete="off" />
-        <div id="mainSearchResults" class="search-dropdown"></div>
-      </div>
-      <div class="selectors-row">
-        <div class="sel-btn book" onclick="openModal('bookModal')"><span class="sel-val" id="valBook">Загрузка...</span><svg class="chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
-        <div class="sel-btn" onclick="openModal('chapterModal')"><span class="sel-val" id="valChapter">—</span><svg class="chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
-        <div class="sel-btn" onclick="openModal('verseModal')"><span class="sel-val" id="valVerse">—</span><svg class="chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
-      </div>
-      <div class="btn-row">
-        <button id="randomBtn" class="btn-secondary">Случайный стих</button>
-        <button id="findBtn" class="btn-main"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>Найти</button>
-      </div>
-      <div class="stats" id="statsRow"></div>
-      <div class="note-box">Связи в этом варианте строятся автоматически по тексту всей Библии: совпадающим ключевым словам, именам и темам. Структура уже готова для замены на ручную базу классических перекрёстных ссылок без переделки интерфейса.</div>
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-card">
+      <div class="spinner"></div>
+      <div class="loading-title">Подготовка умного индекса</div>
+      <div class="loading-text" id="loadingText">Загружается текст Библии и строится быстрый поиск по словам, темам и духовным образам…</div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
     </div>
-    <div id="resultsSection">
-      <div class="premium-card animate-up">
-        <div id="resRef" class="verse-ref">—</div>
-        <div id="resText" class="verse-text">—</div>
-        <div class="stats" id="resultStats"></div>
-        <div class="info-hint"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg><span>Нажмите на любую ссылку ниже, чтобы сначала открыть текст стиха в предпросмотре, а затем перейти к нему.</span></div>
-        <div class="links-title">Ссылаются на этот текст</div>
-        <div id="inLinksGrid" class="tags-container"></div>
-        <div style="height:8px"></div>
-        <div class="links-title">Этот текст ссылается на</div>
-        <div id="outLinksGrid" class="tags-container"></div>
+  </div>
+
+  <div class="app-wrapper centered" id="appWrapper">
+    <div class="app-container">
+      <div class="premium-card">
+        <div class="main-hint">Библейские связи и смысловые перекрёстные ссылки</div>
+        <div class="sub-hint">Поиск стал быстрее: теперь он учитывает не только слова, но и темы, символы и духовные образы.</div>
+        <div class="stats">
+          <div class="stat" id="statBooks">66 книг</div>
+          <div class="stat" id="statVerses">31 346 стихов</div>
+          <div class="stat" id="statLinks">смысловое ранжирование ссылок</div>
+        </div>
+        <div class="search-wrap">
+          <input type="text" id="mainSearchInput" class="search-input" placeholder="Слово, фраза, тема или ссылка: Агнец, крест, вода живая, Ин.3.16" autocomplete="off" />
+          <div id="mainSearchResults" class="search-dropdown"></div>
+        </div>
+        <div class="selectors-row">
+          <div class="sel-btn book" onclick="openModal('bookModal')"><span class="sel-val" id="valBook"></span><svg class="chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
+          <div class="sel-btn" onclick="openModal('chapterModal')"><span class="sel-val" id="valChapter"></span><svg class="chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
+          <div class="sel-btn" onclick="openModal('verseModal')"><span class="sel-val" id="valVerse"></span><svg class="chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
+        </div>
+        <div class="btn-row">
+          <button id="randomBtn" class="btn-ghost">Случайный стих</button>
+          <button id="findBtn" class="btn-main"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>Открыть</button>
+        </div>
       </div>
-      <div class="graph-container animate-up delay-1">
-        <div class="graph-title">Дерево взаимосвязей</div>
-        <div class="info-hint" style="margin:0 0 20px 0;background:transparent;border-color:transparent;padding:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg><span><strong>Как читать схему:</strong> сверху расположены стихи, ведущие к текущему; снизу — те, куда ведёт текущий стих. Нажмите на любой блок.</span></div>
-        <svg id="treeSvg" class="tree" width="100%" height="300"></svg>
+
+      <div id="resultsSection">
+        <div class="premium-card">
+          <div id="resRef" class="verse-ref"></div>
+          <div id="resText" class="verse-text"></div>
+          <div id="themeRow" class="theme-row"></div>
+          <div class="info-hint"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg><span>Сначала показаны обычные связи из базы, но они дополнительно переупорядочиваются по общим темам, образам и духовной символике. Ниже отдельно выводятся дополнительные смысловые связи.</span></div>
+          <div class="links-title">Ссылаются на этот текст</div>
+          <div id="inLinksGrid" class="link-list"></div>
+          <div class="links-title">Этот текст ссылается на</div>
+          <div id="outLinksGrid" class="link-list"></div>
+          <div class="links-title">Дополнительные смысловые связи</div>
+          <div id="semanticLinksGrid" class="link-list"></div>
+        </div>
+        <div class="graph-container">
+          <div class="graph-title">Дерево взаимосвязей</div>
+          <div class="info-hint" style="margin:0 0 18px 0;background:transparent;border-color:transparent;padding:0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg><span><strong>Как читать схему:</strong> сверху — входящие ссылки, снизу — исходящие. Нажми на любой блок, чтобы открыть стих.</span></div>
+          <svg id="treeSvg" width="100%" height="300"></svg>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<div class="modal-overlay" id="bookModal" onclick="closeModal('bookModal')"><div class="modal-content" onclick="event.stopPropagation()"><div class="modal-header"><div class="modal-title">Выберите книгу</div><button class="btn-close" onclick="closeModal('bookModal')">✕</button></div><div class="modal-body"><input type="text" id="bookSearch" class="modal-search" placeholder="Поиск книги..." autocomplete="off"/><div id="bookList"></div></div></div></div>
-<div class="modal-overlay" id="chapterModal" onclick="closeModal('chapterModal')"><div class="modal-content" onclick="event.stopPropagation()"><div class="modal-header"><div class="modal-title">Выберите главу</div><button class="btn-close" onclick="closeModal('chapterModal')">✕</button></div><div class="modal-body"><div id="chapterList" class="grid-list"></div></div></div></div>
-<div class="modal-overlay" id="verseModal" onclick="closeModal('verseModal')"><div class="modal-content" onclick="event.stopPropagation()"><div class="modal-header"><div class="modal-title">Выберите стих</div><button class="btn-close" onclick="closeModal('verseModal')">✕</button></div><div class="modal-body"><div id="verseList" class="grid-list"></div></div></div></div>
-<div class="modal-overlay" id="previewModal" onclick="closeModal('previewModal')"><div class="modal-content" onclick="event.stopPropagation()"><div class="modal-header"><div class="modal-title" id="previewTitle">Ссылка</div><button class="btn-close" onclick="closeModal('previewModal')">✕</button></div><div class="modal-body"><div id="previewText" class="preview-text">...</div><button class="btn-full" id="btnGoTo">Перейти к тексту</button></div></div></div>
-<script src="./bible_full_data.js"></script>
-<script>
-  const DATA = window.BIBLE_DATA;
-  const BOOKS = DATA.books;
-  const VERSES = DATA.verses;
-  const LINKS = DATA.links;
-  const INCOMING = DATA.incoming;
+
+  <div class="modal-overlay" id="bookModal" onclick="closeModal('bookModal')"><div class="modal-content" onclick="event.stopPropagation()"><div class="modal-header"><div class="modal-title">Выберите книгу</div><button class="btn-close" onclick="closeModal('bookModal')">✕</button></div><div class="modal-body"><input type="text" id="bookSearch" class="modal-search" placeholder="Поиск книги..." autocomplete="off"/><div id="bookList"></div></div></div></div>
+  <div class="modal-overlay" id="chapterModal" onclick="closeModal('chapterModal')"><div class="modal-content" onclick="event.stopPropagation()"><div class="modal-header"><div class="modal-title">Выберите главу</div><button class="btn-close" onclick="closeModal('chapterModal')">✕</button></div><div class="modal-body"><div id="chapterList" class="grid-list"></div></div></div></div>
+  <div class="modal-overlay" id="verseModal" onclick="closeModal('verseModal')"><div class="modal-content" onclick="event.stopPropagation()"><div class="modal-header"><div class="modal-title">Выберите стих</div><button class="btn-close" onclick="closeModal('verseModal')">✕</button></div><div class="modal-body"><div id="verseList" class="grid-list"></div></div></div></div>
+  <div class="modal-overlay" id="previewModal" onclick="closeModal('previewModal')"><div class="modal-content" onclick="event.stopPropagation()"><div class="modal-header"><div class="modal-title" id="previewTitle"></div><button class="btn-close" onclick="closeModal('previewModal')">✕</button></div><div class="modal-body"><div id="previewText" class="preview-text"></div><div id="previewReason" class="info-hint" style="margin-top:0"></div><button class="btn-full" id="btnGoTo">Перейти к тексту</button></div></div></div>
+
+  <script src="bible_full_data.js"></script>
+  <script>
+  const DATA = window.BIBLE_DATA || {books:[],verses:{},links:{},incoming:{}};
+  const BOOKS = DATA.books || [];
+  const VERSES = DATA.verses || {};
+  const LINKS = DATA.links || {};
+  const INCOMING = DATA.incoming || {};
   const ALL_REFS = Object.keys(VERSES);
-  const ALL_VERSES = ALL_REFS.map(ref => VERSES[ref]);
-  const appWrapper = document.getElementById('appWrapper');
-  const resultsSection = document.getElementById('resultsSection');
-  const statsRow = document.getElementById('statsRow');
-  const resultStats = document.getElementById('resultStats');
-  statsRow.innerHTML = `<div class="stat">Книг: ${BOOKS.length}</div><div class="stat">Стихов: ${ALL_REFS.length.toLocaleString('ru-RU')}</div><div class="stat">Связей: ${Object.values(LINKS).reduce((a,b)=>a+b.length,0).toLocaleString('ru-RU')}</div>`;
-  let state = { book: 'От Иоанна', chapter: 3, verse: 16 };
-  let previewTarget = null;
-  function getBookMeta(name){ return BOOKS.find(b => b.name === name); }
-  function getChapters(bookName){ const b = getBookMeta(bookName); return b ? b.chapters.map(x => x.chapter) : []; }
-  function getVerses(bookName, chapter){ const b = getBookMeta(bookName); const c = b ? b.chapters.find(x => x.chapter == chapter) : null; return c ? Array.from({length: c.verses}, (_,i)=>i+1) : []; }
-  function makeRef(bookName, chapter, verse){ const b = getBookMeta(bookName); return b ? `${b.abbr}${chapter}.${verse}` : null; }
-  function bookNameFromRef(ref){ return VERSES[ref] ? VERSES[ref].book : ''; }
-  function updateMenuLabels(){ document.getElementById('valBook').textContent = state.book; document.getElementById('valChapter').textContent = state.chapter; document.getElementById('valVerse').textContent = state.verse; }
-  function triggerResultAnimations(){ const animatedElements = resultsSection.querySelectorAll('.animate-up'); animatedElements.forEach(el => { el.classList.remove('animate-up'); void el.offsetWidth; el.classList.add('animate-up'); }); }
-  function initLists(){
-    const books = BOOKS.map(b => b.name);
-    const renderBooks = (query = '') => {
-      const q = query.toLowerCase().trim();
-      const filtered = books.filter(b => b.toLowerCase().includes(q));
-      document.getElementById('bookList').innerHTML = filtered.map(b => `<div class="list-item" onclick="selectBook('${b.replaceAll("'","&#39;")}')">${b}</div>`).join('') || `<div class="small-muted">Ничего не найдено</div>`;
+
+  const THEME_RULES = {
+    love:['любов','возлюб','милост','милосерд'], faith:['вер','упова','надежд'], salvation:['спас','избав','вечн','искуп','оправд'], sin:['грех','беззакони','вина','преступл'], forgiveness:['прост','очист','омыт','прощ'], sacrifice:['жертв','заклан','всесожжен','алтар','агнец','кров','пасх','умер'], covenant:['завет','обетован','клятв'], law:['закон','заповед','устав','повел'], grace:['благодат','дар'], kingdom:['царств','престол','владык'], glory:['слав','велич'], light:['свет','сия','светиль'], word:['слов','истин','мудрост'], shepherd:['пастыр','овц','стад'], lamb:['агнец','ягн','овн'], blood:['кров'], water:['вод','источник','река'], bread:['хлеб','манн'], vine:['виноград','лоза','вино'], spirit:['дух','дыхан'], fire:['огн','плам'], temple:['храм','скини','святилищ'], priest:['священ','первосвящ','левит'], prophet:['пророк','пророч'], king:['царь'], messiah:['христ','месси','единород'], cross:['крест','древ','расп','вознес'], resurrection:['воскрес','восст'], creation:['сотвор','начал','неб','земл'], exodus:['егип','море','фараон','пустын'], passover:['пасх','агнец','кров'], promise_seed:['семя','потом'], abraham:['авраам','исаак','иаков'], david:['давид'], jerusalem:['иерусалим','сион'], healing:['исцел','врач'], redemption:['искуп','выкуп'], holiness:['свят','освящ'], presence:['лиц','пребыв'], judgment:['суд','гнев','кара'], mercy:['помил','щедр'], rest:['покой','суббот'], bride:['невест','брак'], sonship:['сын','отец','дети'], serpent:['зме'], rock:['камен','скал'], mountain:['гор'], wisdom:['мудр','разум'], prayer:['молит','взыва'], peace:['мир','покой'], righteousness:['правед','правд'], hope:['надежд'], life:['жизн'], death:['смерт','умер']
+  };
+  const THEME_LABELS = {love:'любовь',faith:'вера',salvation:'спасение',sin:'грех',forgiveness:'прощение',sacrifice:'жертва',covenant:'завет',law:'закон',grace:'благодать',kingdom:'царство',glory:'слава',light:'свет',word:'слово',shepherd:'пастырь',lamb:'агнец',blood:'кровь',water:'вода',bread:'хлеб',vine:'лоза',spirit:'дух',fire:'огонь',temple:'храм',priest:'священство',prophet:'пророчество',king:'царь',messiah:'мессия',cross:'крест',resurrection:'воскресение',creation:'творение',exodus:'исход',passover:'пасха',promise_seed:'обетованное семя',abraham:'авраамов завет',david:'давидово царство',jerusalem:'иерусалим/сион',healing:'исцеление',redemption:'искупление',holiness:'святость',presence:'присутствие Бога',judgment:'суд',mercy:'милость',rest:'покой',bride:'невеста',sonship:'сыновство',serpent:'змей',rock:'камень/скала',mountain:'гора',wisdom:'мудрость',prayer:'молитва',peace:'мир',righteousness:'праведность',hope:'надежда',life:'жизнь',death:'смерть'};
+  const QUERY_ALIASES = {'агнец':'lamb','жертва':'sacrifice','крест':'cross','воскресение':'resurrection','вода':'water','хлеб':'bread','свет':'light','пастырь':'shepherd','храм':'temple','дух':'spirit','завет':'covenant','царство':'kingdom','грех':'sin','прощение':'forgiveness','спасение':'salvation','искупление':'redemption','кровь':'blood','пасха':'passover','авраам':'abraham','давид':'david','сион':'jerusalem','змей':'serpent','скала':'rock','гора':'mountain','любовь':'love','вера':'faith','закон':'law','благодать':'grace','праведность':'righteousness','мессия':'messiah','слово':'word','слава':'glory','молитва':'prayer','мудрость':'wisdom','жизнь':'life','смерть':'death','милость':'mercy','суд':'judgment','святость':'holiness'};
+  const BRIDGES = [['lamb','sacrifice',2],['lamb','passover',2],['lamb','messiah',2.5],['passover','blood',1.8],['blood','covenant',1.8],['water','spirit',2],['water','life',1.6],['bread','life',1.8],['bread','word',1.4],['light','word',1.5],['light','messiah',1.7],['shepherd','king',1.4],['shepherd','messiah',2],['temple','presence',1.5],['temple','holiness',1.3],['creation','word',1.4],['serpent','cross',2.6],['serpent','healing',1.8],['promise_seed','abraham',1.5],['promise_seed','messiah',1.8],['david','kingdom',1.6],['david','messiah',2.2],['jerusalem','temple',1.5],['death','resurrection',2.2],['sin','forgiveness',1.8],['sin','sacrifice',1.8],['law','grace',1.4],['judgment','mercy',1.5],['rock','water',1.6],['priest','sacrifice',1.8]];
+  const BRIDGE_MAP = {}; BRIDGES.forEach(([a,b,w])=>{(BRIDGE_MAP[a] ||= []).push([b,w]); (BRIDGE_MAP[b] ||= []).push([a,w]);});
+
+  const loadingOverlay = document.getElementById('loadingOverlay'); const loadingText = document.getElementById('loadingText'); const progressFill = document.getElementById('progressFill');
+  const appWrapper = document.getElementById('appWrapper'); const resultsSection = document.getElementById('resultsSection');
+  const mainSearchInput = document.getElementById('mainSearchInput'); const mainSearchResults = document.getElementById('mainSearchResults');
+  let previewTarget = null; let previewMeta = null; let state = {book:'Бытие',chapter:1,verse:1};
+  const CACHE = {tokensByRef:{}, textLowerByRef:{}, themesByRef:{}, significantByRef:{}, tokenIndex:{}, themeIndex:{}, df:{}, allBooks:[]};
+
+  function normalizeWord(word){ let w=(word||'').toLowerCase().replace(/ё/g,'е').replace(/[^а-яa-z0-9]/gi,''); if(w.length<=3) return w; const endings=['иями','ями','ами','ями','ого','ему','ому','ыми','ими','ее','ие','ые','ое','ей','ий','ый','ой','ем','им','ом','ам','ям','ах','ях','ов','ев','ом','ем','ою','ею','ия','ья','ье','ии','иям','ием','ия','а','я','ы','и','е','о','у','ю','ь']; for(const end of endings){ if(w.length-end.length>=3 && w.endsWith(end)){ w=w.slice(0,-end.length); break; } } return w; }
+  function tokenize(text){ return (text.toLowerCase().replace(/ё/g,'е').match(/[а-яa-z0-9]+/gi)||[]).map(normalizeWord).filter(Boolean); }
+  function snippet(text,n=92){ return text.length>n ? text.slice(0,n).trim()+'…' : text; }
+  function escapeHtml(s){ return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+  function getAllBooks(){ return BOOKS.map(b=>b.name); }
+  function getChapters(book){ const b=BOOKS.find(x=>x.name===book); return b ? b.chapters.map(c=>c.chapter) : []; }
+  function getVerses(book,chapter){ return Object.values(VERSES).filter(v=>v.book===book && v.chapter==chapter).map(v=>v.verse).sort((a,b)=>a-b); }
+  function makeRef(book,chapter,verse){ return Object.keys(VERSES).find(k=>{ const v=VERSES[k]; return v.book===book && v.chapter==chapter && v.verse==verse; }); }
+  function setProgress(p,msg){ progressFill.style.width = Math.max(0,Math.min(100,p))+'%'; if(msg) loadingText.textContent = msg; }
+
+  async function buildSmartIndex(){
+    CACHE.allBooks = getAllBooks();
+    const refs = ALL_REFS; const df={}; const chunk=800;
+    setProgress(6,'Подготавливаю токены и нормализованные формы слов…');
+    for(let i=0;i<refs.length;i+=chunk){
+      const part=refs.slice(i,i+chunk);
+      part.forEach(ref=>{
+        const text = VERSES[ref].text || '';
+        const tokens = Array.from(new Set(tokenize(text)));
+        CACHE.tokensByRef[ref] = tokens; CACHE.textLowerByRef[ref]=(text||'').toLowerCase().replace(/ё/g,'е');
+        tokens.forEach(t=> df[t]=(df[t]||0)+1);
+      });
+      setProgress(6 + (i/refs.length)*32, 'Собираю быстрый индекс слов…');
+      await new Promise(r=>setTimeout(r,0));
+    }
+    CACHE.df = df;
+    const commonStop = new Set(['и','в','во','не','на','но','что','кто','как','когда','где','чтобы','для','или','от','до','со','ко','а','у','к','по','из','же','бы','был','была','были','есть','это','тот','та','те','над','под','при','мы','вы','они','он','она','его','ее','их','ему','им','да','ибо','так','еще','уже','весь','вся','все','кажд','ин','друг','сей','этот','этих']);
+    setProgress(40,'Определяю духовные темы и символические образы…');
+    for(let i=0;i<refs.length;i+=chunk){
+      const part=refs.slice(i,i+chunk);
+      part.forEach(ref=>{
+        const tokens = CACHE.tokensByRef[ref] || []; const joined = CACHE.textLowerByRef[ref] || ''; const themes = new Set();
+        for(const [theme, pats] of Object.entries(THEME_RULES)){
+          if(tokens.some(t=>pats.some(p=>t.startsWith(p) || p.startsWith(t)))) themes.add(theme);
+        }
+        if(joined.includes('медного змея')) ['serpent','cross','healing'].forEach(t=>themes.add(t));
+        if(joined.includes('хлеб жизни')) ['bread','life','messiah'].forEach(t=>themes.add(t));
+        if(joined.includes('вода живая') || joined.includes('живой воды')) ['water','life','spirit'].forEach(t=>themes.add(t));
+        if(joined.includes('свет миру') || joined.includes('свет мира')) ['light','messiah'].forEach(t=>themes.add(t));
+        if(joined.includes('добрый пастырь')) ['shepherd','messiah'].forEach(t=>themes.add(t));
+        if(joined.includes('сын божий') || joined.includes('сын человеческий')) ['messiah','sonship'].forEach(t=>themes.add(t));
+        if(joined.includes('новый завет')) ['covenant','blood','sacrifice'].forEach(t=>themes.add(t));
+        CACHE.themesByRef[ref] = Array.from(themes);
+        const significant = tokens.filter(t=>!commonStop.has(t) && (df[t]||0) <= 1800 && t.length >= 3).sort((a,b)=>(df[a]||0)-(df[b]||0)).slice(0,12);
+        CACHE.significantByRef[ref] = significant;
+        significant.forEach(t=>{ (CACHE.tokenIndex[t] ||= []).push(ref); });
+        themes.forEach(t=>{ (CACHE.themeIndex[t] ||= []).push(ref); });
+      });
+      setProgress(40 + (i/refs.length)*45, 'Упорядочиваю связи по смыслу и символике…');
+      await new Promise(r=>setTimeout(r,0));
+    }
+    setProgress(95,'Финальные штрихи…');
+    const first = VERSES['Ин.3.16'] ? 'Иоанн' : BOOKS[0]?.name;
+    state.book = first || 'Бытие'; state.chapter = first==='Иоанн' ? 3 : 1; state.verse = first==='Иоанн' ? 16 : 1;
+    initLists();
+    setTimeout(()=>{ loadingOverlay.classList.add('hidden'); showResults(makeRef(state.book,state.chapter,state.verse)); }, 250);
+  }
+
+  function computeQueryThemes(queryTokens){ const result = new Set(); queryTokens.forEach(t=>{ if(QUERY_ALIASES[t]) result.add(QUERY_ALIASES[t]); for(const [theme,pats] of Object.entries(THEME_RULES)){ if(pats.some(p=>t.startsWith(p) || p.startsWith(t))) result.add(theme); } }); return Array.from(result); }
+
+  function scoreSemanticPair(fromRef, candRef){
+    const themesA = new Set(CACHE.themesByRef[fromRef] || []), themesB = new Set(CACHE.themesByRef[candRef] || []);
+    const sigA = new Set(CACHE.significantByRef[fromRef] || []), sigB = new Set(CACHE.significantByRef[candRef] || []);
+    const sharedThemes = Array.from(themesA).filter(t=>themesB.has(t));
+    const sharedTokens = Array.from(sigA).filter(t=>sigB.has(t));
+    let score = sharedThemes.length * 2.2 + sharedTokens.reduce((sum,t)=> sum + Math.max(0.8, 4/((CACHE.df[t]||5)/20)), 0);
+    const reasons = [];
+    if(sharedThemes.length) reasons.push('общие темы: ' + sharedThemes.slice(0,3).map(t=>THEME_LABELS[t]||t).join(', '));
+    if(sharedTokens.length) reasons.push('общие образы: ' + sharedTokens.slice(0,3).join(', '));
+    const bridgeReasons = [];
+    themesA.forEach(t=>{ (BRIDGE_MAP[t]||[]).forEach(([other,w])=>{ if(themesB.has(other) && !sharedThemes.includes(other)){ score += w; bridgeReasons.push((THEME_LABELS[t]||t)+' ↔ '+(THEME_LABELS[other]||other)); } }); });
+    if(bridgeReasons.length) reasons.push('символика: ' + Array.from(new Set(bridgeReasons)).slice(0,2).join(', '));
+    if((LINKS[fromRef]||[]).includes(candRef)) score += 1.5;
+    if((INCOMING[fromRef]||[]).includes(candRef)) score += 1.1;
+    return {score: Number(score.toFixed(2)), reasons};
+  }
+
+  function getSemanticSuggestions(ref){
+    const baseSet = new Set([...(LINKS[ref]||[]), ...(INCOMING[ref]||[])]);
+    const candidates = new Set();
+    (CACHE.significantByRef[ref]||[]).forEach(t=>{ (CACHE.tokenIndex[t]||[]).slice(0,160).forEach(r=>candidates.add(r)); });
+    (CACHE.themesByRef[ref]||[]).forEach(t=>{ (CACHE.themeIndex[t]||[]).slice(0,220).forEach(r=>candidates.add(r)); });
+    candidates.delete(ref);
+    const scored = [];
+    candidates.forEach(c=>{ const meta = scoreSemanticPair(ref,c); if(meta.score >= 4.2) scored.push({ref:c, score:meta.score, reasons:meta.reasons}); });
+    scored.sort((a,b)=> b.score - a.score || a.ref.localeCompare(b.ref,'ru'));
+    return {
+      incoming: (INCOMING[ref]||[]).map(r=>({ref:r, ...scoreSemanticPair(ref,r), type:'in'})).sort((a,b)=>b.score-a.score),
+      outgoing: (LINKS[ref]||[]).map(r=>({ref:r, ...scoreSemanticPair(ref,r), type:'out'})).sort((a,b)=>b.score-a.score),
+      extra: scored.filter(x=>!baseSet.has(x.ref)).slice(0,12)
     };
-    renderBooks();
-    const bookSearch = document.getElementById('bookSearch');
-    if (!bookSearch.dataset.bind) { bookSearch.addEventListener('input', e => renderBooks(e.target.value)); bookSearch.dataset.bind = '1'; }
-    const chaps = getChapters(state.book); if (!chaps.includes(state.chapter)) state.chapter = chaps[0];
-    document.getElementById('chapterList').innerHTML = chaps.map(c => `<div class="grid-item ${c == state.chapter ? 'active' : ''}" onclick="selectChapter(${c})">${c}</div>`).join('');
-    const vs = getVerses(state.book, state.chapter); if (!vs.includes(state.verse)) state.verse = vs[0];
-    document.getElementById('verseList').innerHTML = vs.map(v => `<div class="grid-item ${v == state.verse ? 'active' : ''}" onclick="selectVerse(${v})">${v}</div>`).join('');
+  }
+
+  function runSmartSearch(query){
+    const raw = (query||'').trim(); if(!raw) return [];
+    const q = raw.toLowerCase().replace(/ё/g,'е'); const qTokens = Array.from(new Set(tokenize(q))); const qThemes = computeQueryThemes(qTokens);
+    const candidates = new Map();
+    const add = (ref, score, reason) => { const prev = candidates.get(ref) || {ref, score:0, reasons:[]}; prev.score += score; if(reason) prev.reasons.push(reason); candidates.set(ref, prev); };
+    ALL_REFS.forEach(ref=>{ if(ref.toLowerCase().startsWith(q)) add(ref, 120, 'точное совпадение ссылки'); else if(ref.toLowerCase().includes(q)) add(ref, 70, 'совпадение по ссылке'); });
+    qTokens.forEach(t=>{ (CACHE.tokenIndex[t]||[]).forEach(ref=> add(ref, Math.max(8, 32/((CACHE.df[t]||10)/20)), 'совпадение по слову «'+t+'»')); });
+    qThemes.forEach(t=>{ (CACHE.themeIndex[t]||[]).slice(0,2800).forEach(ref=> add(ref, 11, 'совпадение по теме «'+(THEME_LABELS[t]||t)+'»')); });
+    if(candidates.size < 15 && q.length >= 4){ ALL_REFS.forEach(ref=>{ const txt = CACHE.textLowerByRef[ref]||''; if(txt.includes(q)) add(ref, 35, 'точная фраза в тексте'); }); }
+    const results = [];
+    candidates.forEach(item=>{
+      const txt = CACHE.textLowerByRef[item.ref] || ''; const v = VERSES[item.ref]; if(!v) return;
+      if(txt.includes(q)) item.score += 24;
+      const verseTokens = new Set(CACHE.tokensByRef[item.ref]||[]); let matched=0; qTokens.forEach(t=>{ if(verseTokens.has(t)) matched++; }); item.score += matched * 9;
+      const verseThemes = new Set(CACHE.themesByRef[item.ref]||[]); qThemes.forEach(t=>{ if(verseThemes.has(t)) item.score += 6; });
+      results.push(item);
+    });
+    results.sort((a,b)=> b.score - a.score || a.ref.localeCompare(b.ref,'ru'));
+    return results.slice(0,24);
+  }
+
+  function updateMenuLabels(){ document.getElementById('valBook').textContent=state.book; document.getElementById('valChapter').textContent=state.chapter; document.getElementById('valVerse').textContent=state.verse; }
+  function initLists(){
+    const books = getAllBooks();
+    const renderBooks = (query='') => { const q=query.toLowerCase(); document.getElementById('bookList').innerHTML = books.filter(b=>b.toLowerCase().includes(q)).map(b=>`<div class="list-item" onclick="selectBook('${b.replace(/'/g,"&#39;")}')">${b}</div>`).join(''); };
+    renderBooks(); const bs = document.getElementById('bookSearch'); if(!bs.dataset.bound){ bs.addEventListener('input', e=>renderBooks(e.target.value)); bs.dataset.bound='1'; }
+    const chaps = getChapters(state.book); if(!chaps.includes(state.chapter)) state.chapter = chaps[0]; document.getElementById('chapterList').innerHTML = chaps.map(c=>`<div class="grid-item ${c==state.chapter?'active':''}" onclick="selectChapter(${c})">${c}</div>`).join('');
+    const vs = getVerses(state.book,state.chapter); if(!vs.includes(state.verse)) state.verse = vs[0]; document.getElementById('verseList').innerHTML = vs.map(v=>`<div class="grid-item ${v==state.verse?'active':''}" onclick="selectVerse(${v})">${v}</div>`).join('');
     updateMenuLabels();
   }
-  window.selectBook = (b) => { state.book = b; initLists(); closeModal('bookModal'); };
-  window.selectChapter = (c) => { state.chapter = c; initLists(); closeModal('chapterModal'); };
-  window.selectVerse = (v) => { state.verse = v; initLists(); closeModal('verseModal'); };
-  window.openModal = (id) => { document.getElementById(id).classList.add('active'); document.body.classList.add('modal-open'); };
-  window.closeModal = (id) => { document.getElementById(id).classList.remove('active'); if (!document.querySelector('.modal-overlay.active')) document.body.classList.remove('modal-open'); };
-  const searchInput = document.getElementById('mainSearchInput');
-  const searchResults = document.getElementById('mainSearchResults');
-  function shortText(text, n=85){ return text.length > n ? text.slice(0,n).trim() + '…' : text; }
-  function normalize(s){ return (s||'').toLowerCase().replace(/ё/g,'е').trim(); }
-  function searchRefs(query){
-    const q = normalize(query);
-    if (!q) return [];
-    const isRefLike = /\d|\./.test(q);
-    const matches = [];
-    for (const ref of ALL_REFS) {
-      const v = VERSES[ref];
-      const hayRef = normalize(ref + ' ' + v.book + ' ' + v.abbr + v.chapter + ':' + v.verse);
-      const hayText = normalize(v.text);
-      let score = 0;
-      if (hayRef.includes(q)) score += isRefLike ? 9 : 4;
-      if (hayText.includes(q)) score += 5;
-      if (score) {
-        if (hayRef.startsWith(q)) score += 3;
-        if (hayText.startsWith(q)) score += 1;
-        matches.push({ref, score});
-      }
-    }
-    matches.sort((a,b)=>b.score-a.score);
-    return matches.slice(0,12).map(x=>x.ref);
-  }
-  searchInput.addEventListener('input', () => {
-    const q = searchInput.value.trim();
-    if (!q) { searchResults.style.display = 'none'; return; }
-    const res = searchRefs(q);
-    if (res.length) {
-      searchResults.innerHTML = res.map(r => {
-        const v = VERSES[r];
-        return `<div class="search-item" onclick="selectFromSearch('${r}')"><strong>${r}</strong><span>${shortText(v.text)}</span></div>`;
-      }).join('');
-    } else {
-      searchResults.innerHTML = `<div class="search-item"><span>Ничего не найдено</span></div>`;
-    }
-    searchResults.style.display = 'block';
+  window.selectBook = (b)=>{ state.book=b; initLists(); closeModal('bookModal'); };
+  window.selectChapter = (c)=>{ state.chapter=c; initLists(); closeModal('chapterModal'); };
+  window.selectVerse = (v)=>{ state.verse=v; initLists(); closeModal('verseModal'); };
+  window.openModal = (id)=>{ document.getElementById(id).classList.add('active'); document.body.classList.add('modal-open'); };
+  window.closeModal = (id)=>{ document.getElementById(id).classList.remove('active'); document.body.classList.remove('modal-open'); };
+
+  mainSearchInput.addEventListener('input', ()=>{
+    const q = mainSearchInput.value.trim(); if(!q){ mainSearchResults.style.display='none'; return; }
+    const res = runSmartSearch(q); if(!res.length){ mainSearchResults.innerHTML='<div class="search-item"><span>Ничего не найдено</span></div>'; mainSearchResults.style.display='block'; return; }
+    mainSearchResults.innerHTML = res.slice(0,10).map(item=>{ const v=VERSES[item.ref]; return `<div class="search-item" onclick="selectFromSearch('${item.ref}')"><strong>${item.ref}</strong><span>${escapeHtml(snippet(v.text,88))}</span><div class="reason">${escapeHtml(Array.from(new Set(item.reasons)).slice(0,2).join(' · '))}</div></div>`; }).join('');
+    mainSearchResults.style.display='block';
   });
-  document.addEventListener('click', (e) => { if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) searchResults.style.display = 'none'; });
-  window.selectFromSearch = (ref) => {
-    searchInput.value = '';
-    searchResults.style.display = 'none';
-    const v = VERSES[ref];
-    if (v) { state = { book: v.book, chapter: v.chapter, verse: v.verse }; initLists(); showResults(ref); }
-  };
-  window.openPreview = (ref) => {
-    const v = VERSES[ref]; if (!v) return;
-    document.getElementById('previewTitle').textContent = ref;
-    document.getElementById('previewText').textContent = v.text;
-    previewTarget = ref;
-    openModal('previewModal');
-  };
-  document.getElementById('btnGoTo').addEventListener('click', () => {
-    closeModal('previewModal');
-    const v = VERSES[previewTarget];
-    if (!v) return;
-    state = { book: v.book, chapter: v.chapter, verse: v.verse };
-    initLists();
-    showResults(previewTarget);
-  });
-  function renderLinkTags(elId, refs, type, emptyText){
-    document.getElementById(elId).innerHTML = refs.length ? refs.map(r => `<button class="tag-btn ${type}" onclick="openPreview('${r}')">${r}</button>`).join('') : `<span class="small-muted">${emptyText}</span>`;
+  document.addEventListener('click',(e)=>{ if(!mainSearchInput.contains(e.target) && !mainSearchResults.contains(e.target)) mainSearchResults.style.display='none'; });
+  window.selectFromSearch = (ref)=>{ mainSearchInput.value=''; mainSearchResults.style.display='none'; const v=VERSES[ref]; if(!v) return; state={book:v.book, chapter:v.chapter, verse:v.verse}; initLists(); showResults(ref); };
+
+  function renderLinkList(containerId, items, type){ const container=document.getElementById(containerId); if(!items.length){ container.innerHTML='<div class="empty-note">Связей не найдено.</div>'; return; } container.innerHTML = items.map(item=>{ const v=VERSES[item.ref]; return `<div class="link-card"><div class="link-head"><span class="mini-ref" onclick="openPreview('${item.ref}','${type}')">${item.ref}</span><span class="mini-badge ${type==='incoming'?'in':type==='outgoing'?'out':'sem'}">${type==='incoming'?'входящая':type==='outgoing'?'исходящая':'смысловая'}</span><span class="mini-badge">score ${item.score}</span></div><div class="mini-text">${escapeHtml(snippet(v?.text||'',140))}</div><div class="mini-reason">${escapeHtml((item.reasons||[]).slice(0,2).join(' · ') || 'связь по смыслу')}</div></div>`; }).join(''); }
+  function renderThemes(ref){ const row=document.getElementById('themeRow'); const arr=(CACHE.themesByRef[ref]||[]).map(t=>THEME_LABELS[t]||t); row.innerHTML = arr.length ? arr.slice(0,10).map(t=>`<div class="theme-chip">${escapeHtml(t)}</div>`).join('') : ''; }
+
+  window.openPreview = (ref, type='semantic')=>{ const v=VERSES[ref]; if(!v) return; document.getElementById('previewTitle').textContent=ref; document.getElementById('previewText').textContent=v.text; previewTarget=ref; previewMeta=type; const note = type==='incoming' ? 'Этот стих ссылается на текущий текст.' : type==='outgoing' ? 'На этот стих указывает текущий текст.' : 'Это дополнительная смысловая связь по темам, образам и символике.'; document.getElementById('previewReason').innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg><span>${note}</span>`; openModal('previewModal'); };
+  document.getElementById('btnGoTo').addEventListener('click', ()=>{ closeModal('previewModal'); if(!previewTarget) return; const v=VERSES[previewTarget]; state={book:v.book, chapter:v.chapter, verse:v.verse}; initLists(); showResults(previewTarget); });
+
+  function drawVerticalTree(centerRef, incoming, outgoing){
+    const svg=document.getElementById('treeSvg'); const w=svg.clientWidth || 600; const rowH=95; const inRefs=incoming.slice(0,6).map(x=>x.ref), outRefs=outgoing.slice(0,6).map(x=>x.ref); const hasIn=inRefs.length>0, hasOut=outRefs.length>0; const totalH=rowH*((hasIn?1:0)+1+(hasOut?1:0))+30; svg.setAttribute('height', totalH); svg.setAttribute('viewBox', `0 0 ${w} ${totalH}`); let html=''; let currentY=30; const inY=hasIn?currentY:-100; if(hasIn) currentY+=rowH; const centerY=currentY; currentY+=rowH; const outY=hasOut?currentY:-100;
+    const path=(x1,y1,x2,y2,color,dash='')=>`<path d="M ${x1} ${y1} C ${x1} ${(y1+y2)/2}, ${x2} ${(y1+y2)/2}, ${x2} ${y2}" fill="none" stroke="${color}" stroke-width="2.5" ${dash}/>`;
+    const getX=(i,total)=>(w/(total+1))*(i+1), cx=w/2;
+    inRefs.forEach((_,i)=> html += path(getX(i,inRefs.length), inY+16, cx, centerY-16, 'var(--in-link)', 'stroke-dasharray="6,4"'));
+    outRefs.forEach((_,i)=> html += path(cx, centerY+16, getX(i,outRefs.length), outY-16, 'var(--out-link)'));
+    const node=(ref,x,y,type)=>{ const center=type==='center'; const fill=center?'var(--accent)':'var(--bg-card)'; const stroke=center?'var(--accent)': type==='in'?'var(--in-link)':'var(--out-link)'; const textFill=center?'#fff':'var(--text-main)'; const width=center?92:82; const height=center?38:34; return `<g style="cursor:pointer" onclick="openPreview('${ref}','${type==='in'?'incoming':type==='out'?'outgoing':'semantic'}')">${center?`<rect x="${x-width/2}" y="${y-height/2+2}" width="${width}" height="${height}" rx="8" fill="rgba(49,130,206,.25)"></rect>`:''}<rect x="${x-width/2}" y="${y-height/2}" width="${width}" height="${height}" rx="8" fill="${fill}" stroke="${stroke}" stroke-width="2"></rect><text x="${x}" y="${y+5}" text-anchor="middle" font-size="${center?14:12}" font-weight="700" fill="${textFill}">${ref}</text></g>`; };
+    inRefs.forEach((r,i)=> html += node(r,getX(i,inRefs.length),inY,'in')); html += node(centerRef,cx,centerY,'center'); outRefs.forEach((r,i)=> html += node(r,getX(i,outRefs.length),outY,'out')); svg.innerHTML=html;
   }
-  function showResults(ref){
-    const verse = VERSES[ref];
-    if (!verse) return;
-    appWrapper.classList.remove('centered');
-    resultsSection.style.display = 'block';
-    triggerResultAnimations();
-    document.getElementById('resRef').textContent = ref;
-    document.getElementById('resText').textContent = verse.text;
-    const outLinks = LINKS[ref] || [];
-    const inLinks = INCOMING[ref] || [];
-    resultStats.innerHTML = `<div class="stat">Книга: ${verse.book}</div><div class="stat">Глава: ${verse.chapter}</div><div class="stat">Стих: ${verse.verse}</div><div class="stat">Входящих: ${inLinks.length}</div><div class="stat">Исходящих: ${outLinks.length}</div>`;
-    renderLinkTags('outLinksGrid', outLinks, 'out', 'Нет найденных исходящих связей');
-    renderLinkTags('inLinksGrid', inLinks, 'in', 'Нет найденных входящих связей');
-    drawVerticalTree(ref, outLinks, inLinks);
-    setTimeout(() => { resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 90);
-  }
-  function drawVerticalTree(centerRef, outLinks, inLinks) {
-    const svg = document.getElementById('treeSvg');
-    const w = Math.max(svg.clientWidth || 420, 420);
-    const rowH = 95;
-    const hasIn = inLinks.length > 0;
-    const hasOut = outLinks.length > 0;
-    const totalH = rowH * ((hasIn ? 1 : 0) + 1 + (hasOut ? 1 : 0)) + 30;
-    svg.setAttribute('height', totalH);
-    svg.setAttribute('viewBox', `0 0 ${w} ${totalH}`);
-    let html = '';
-    let currentY = 30;
-    const limitedIn = inLinks.slice(0, 8);
-    const limitedOut = outLinks.slice(0, 8);
-    const inY = hasIn ? currentY : -100;
-    if (hasIn) currentY += rowH;
-    const centerY = currentY; currentY += rowH;
-    const outY = hasOut ? currentY : -100;
-    const drawPath = (x1, y1, x2, y2, color, dash=false) => {
-      const d = `M ${x1} ${y1} C ${x1} ${(y1+y2)/2}, ${x2} ${(y1+y2)/2}, ${x2} ${y2}`;
-      return `<path d="${d}" fill="none" stroke="${color}" stroke-width="2.5" ${dash ? 'stroke-dasharray="6,4"' : ''}/>`;
-    };
-    const getX = (index, total) => (w / (total + 1)) * (index + 1);
-    const cx = w / 2;
-    limitedIn.forEach((_, i) => html += drawPath(getX(i, limitedIn.length), inY+16, cx, centerY-16, 'var(--in-link)', true));
-    limitedOut.forEach((_, i) => html += drawPath(cx, centerY+16, getX(i, limitedOut.length), outY-16, 'var(--out-link)'));
-    const drawNode = (ref, x, y, type) => {
-      const isCenter = type === 'center';
-      const fill = isCenter ? 'var(--accent)' : 'var(--bg-card)';
-      const stroke = isCenter ? 'var(--accent)' : (type === 'in' ? 'var(--in-link)' : 'var(--out-link)');
-      const textFill = isCenter ? '#fff' : 'var(--text-main)';
-      const width = isCenter ? 92 : 82;
-      const height = isCenter ? 38 : 34;
-      return `<g style="cursor:pointer;" onclick="openPreview('${ref}')">${isCenter ? `<rect x="${x - width/2}" y="${y - height/2 + 2}" width="${width}" height="${height}" rx="8" fill="rgba(49,130,206,0.25)"></rect>` : ''}<rect x="${x - width/2}" y="${y - height/2}" width="${width}" height="${height}" rx="8" fill="${fill}" stroke="${stroke}" stroke-width="2"></rect><text x="${x}" y="${y + 5}" text-anchor="middle" font-size="${isCenter ? 14 : 12}" font-weight="600" fill="${textFill}">${ref}</text></g>`;
-    };
-    limitedIn.forEach((ref, i) => html += drawNode(ref, getX(i, limitedIn.length), inY, 'in'));
-    html += drawNode(centerRef, cx, centerY, 'center');
-    limitedOut.forEach((ref, i) => html += drawNode(ref, getX(i, limitedOut.length), outY, 'out'));
-    svg.innerHTML = html;
-  }
-  document.getElementById('findBtn').addEventListener('click', () => {
-    const ref = makeRef(state.book, state.chapter, state.verse); if (ref) showResults(ref);
-  });
-  document.getElementById('randomBtn').addEventListener('click', () => {
-    const ref = ALL_REFS[Math.floor(Math.random() * ALL_REFS.length)];
-    const v = VERSES[ref];
-    state = { book: v.book, chapter: v.chapter, verse: v.verse };
-    initLists();
-    showResults(ref);
-  });
-  initLists();
-  showResults(makeRef(state.book, state.chapter, state.verse));
-</script>
+
+  function showResults(ref){ const verse=VERSES[ref]; if(!verse) return; appWrapper.classList.remove('centered'); resultsSection.style.display='block'; document.getElementById('resRef').textContent=ref; document.getElementById('resText').textContent=verse.text; renderThemes(ref); const semantic = getSemanticSuggestions(ref); renderLinkList('inLinksGrid', semantic.incoming, 'incoming'); renderLinkList('outLinksGrid', semantic.outgoing, 'outgoing'); renderLinkList('semanticLinksGrid', semantic.extra, 'semantic'); drawVerticalTree(ref, semantic.incoming, semantic.outgoing); setTimeout(()=> resultsSection.scrollIntoView({behavior:'smooth',block:'start'}), 80); }
+
+  document.getElementById('findBtn').addEventListener('click', ()=>{ const ref=makeRef(state.book,state.chapter,state.verse); if(ref) showResults(ref); });
+  document.getElementById('randomBtn').addEventListener('click', ()=>{ const ref=ALL_REFS[Math.floor(Math.random()*ALL_REFS.length)]; const v=VERSES[ref]; state={book:v.book,chapter:v.chapter,verse:v.verse}; initLists(); showResults(ref); });
+  document.getElementById('statBooks').textContent = BOOKS.length + ' книг'; document.getElementById('statVerses').textContent = ALL_REFS.length.toLocaleString('ru-RU') + ' стихов';
+  buildSmartIndex();
+  </script>
 </body>
 </html>
